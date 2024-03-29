@@ -1,0 +1,159 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    height: 100vh;
+    background-color: aqua;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1vh;
+    overflow: hidden;
+}
+
+
+.list {
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 50vh;
+    aspect-ratio: 7 / 8;
+    border-radius: 10%;
+}
+
+.list > hr {
+    margin: 0;
+    width: 90%;
+}
+
+.item {
+    flex: 10vh 0 0;
+    width: 90%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.5em;
+    padding: 5%;
+}
+
+.invite {
+    width: 50vw;
+    height: 20vh;
+    position: absolute;
+    bottom: -25vh;
+    /* border: 1px outset black; */
+    left: 25vw;
+    display: flex;
+    flex-direction: column;
+    background-color: rgb(255, 255, 255);
+    box-shadow: 0 0 10px black;
+    animation: popup 10s linear;
+}
+
+.info {
+    display: flex;
+    width: 100%;
+    flex-grow: 1;
+    padding: 5%;
+    gap: 10%;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.info > span {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    gap: 10px;
+    height: 100%;
+    width: 30%;
+}
+
+.invite-name {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+    height: 100%;
+    font-size: 1.8em;
+}
+
+.bar {
+    width: 100%;
+    height: 10px;
+    animation: timer-bar 10s linear;
+}
+
+.accept, .deny {
+    aspect-ratio: 1;
+    height: 80%;
+    transition: filter 0.5s;
+}
+
+.accept:hover, .deny:hover {
+    filter: brightness(0.6);
+}
+
+.accept {
+    background-color: lightgreen;
+}
+
+.deny {
+    background-color: red;
+}
+
+.icon {
+    aspect-ratio: 1;
+    width: 80%;
+}
+
+@keyframes timer-bar {
+    0% {
+        background-color: rgb(0, 255, 0);
+        width: 100%;
+    }
+
+    100% {
+        background-color: red;
+        width: 0%;
+    }
+}
+
+@keyframes popup {
+    0% {
+        transform: translateY(0);
+    }
+    1% {
+        transform: translateY(-26vh);
+    }
+    99% {
+        transform: translateY(-26vh);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+@media (orientation : portrait) {
+    .invite {
+        width: 80vw;
+        left: 10vw;
+    }
+
+    .invite-name {
+        font-size: 1em;
+    }
+
+    .info > span {
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .accept, .deny {
+        height: auto;
+        width: 90%;
+    }
+}

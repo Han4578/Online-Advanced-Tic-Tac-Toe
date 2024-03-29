@@ -1,0 +1,33 @@
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: teal;
+    gap: 20vh;
+    overflow: hidden;
+}
+
+canvas {
+    background-color: white;
+}
+
+.upper {
+    width: 100vw;
+    height: 20vh;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.size {
+    display: flex;
+    aspect-ratio: 1 / 2;
+    width: 20vw;
+}

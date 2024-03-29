@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="userList.css">
+    <script src="./userList.js" type="module" defer></script>
+</head>
+<body>
+    <template data-template="item">
+        <div class="item">
+            <span class="name"></span>
+            <button>invite</button>
+        </div>
+        <hr>
+    </template>
+    <template data-template="invite">
+        <div class="invite">
+            <div class="info">
+                <div class="invite-name"></div>
+                <span>
+                    <button class="accept"><img class="icon" src="./images/check.png" alt=""></button>
+                    <button class="deny"><img class="icon" src="./images/close.png" alt=""></button>
+                </span>
+            </div>
+            <div class="bar"></div>
+        </div>
+    </template>
+    <h2>Users</h2>
+    <div class="list"></div>
+    <div class="invite-container"></div>
+</body>
+</html>
