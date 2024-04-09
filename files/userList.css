@@ -1,51 +1,106 @@
+:root {
+    --borders: 25px;
+    --width: 400px;
+}
+
 * {
     box-sizing: border-box;
+    margin: 0;
 }
 
 body {
-    height: 100vh;
+    width: 100vw;
+    padding: 3% 8%;
+    padding-bottom: 0;
     background-color: aqua;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: start;
     align-items: center;
     gap: 1vh;
-    overflow: hidden;
+}
+
+.list-container {
+    background-color: white;
+    border-radius: var(--borders);
 }
 
 
 .list {
-    background-color: white;
+    height: 450px;
+    width: var(--width);
     display: flex;
     flex-direction: column;
     align-items: center;
-    height: 50vh;
-    aspect-ratio: 7 / 8;
-    border-radius: 10%;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    scroll-snap-type: y mandatory;
 }
 
-.list > hr {
-    margin: 0;
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track-piece {
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-track-piece:start {
+    margin-top: 30px;
+}
+
+::-webkit-scrollbar-track-piece:end {
+    margin-bottom: 30px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: rgba(169, 169, 169);
+    border-radius: 10px;
+}
+
+.name::-webkit-scrollbar-track-piece:start {
+    margin-top: 10px;
+}
+
+.name::-webkit-scrollbar-track-piece:end {
+    margin-bottom: 10px;
+}
+
+.scrollbar {
+    width: 10px;
+    height: 100%;
+}
+
+.item-container {
     width: 90%;
 }
 
 .item {
-    flex: 10vh 0 0;
-    width: 90%;
+    flex-basis: 70px;
+    max-height: 3.6em;
+    width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
     font-size: 1.5em;
     padding: 5%;
+    scroll-snap-align: start;
+}
+
+.name {
+    width: calc(100% - 50px);
+    overflow-wrap: break-word;
+    overflow-y: auto;
+    max-height: 3.6em;
 }
 
 .invite {
-    width: 50vw;
-    height: 20vh;
+    --lil-bit: 90px;
+    width: calc(var(--width) + var(--lil-bit));
+    height: 200px;
     position: absolute;
-    bottom: -25vh;
-    /* border: 1px outset black; */
-    left: 25vw;
+    bottom: -200px;
+    left: calc(50vw - calc(var(--width) + var(--lil-bit)) / 2);
     display: flex;
     flex-direction: column;
     background-color: rgb(255, 255, 255);
@@ -56,7 +111,7 @@ body {
 .info {
     display: flex;
     width: 100%;
-    flex-grow: 1;
+    height: calc(100% - 10px);
     padding: 5%;
     gap: 10%;
     justify-content: space-between;
@@ -65,7 +120,7 @@ body {
 
 .info > span {
     display: flex;
-    justify-content: end;
+    justify-content: center;
     align-items: center;
     gap: 10px;
     height: 100%;
@@ -73,11 +128,13 @@ body {
 }
 
 .invite-name {
-    display: flex;
-    align-items: center;
-    flex-grow: 1;
+    width: 70%;
     height: 100%;
     font-size: 1.8em;
+    vertical-align: middle;
+    overflow-wrap: break-word;
+    overflow-y: auto;
+    min-width: none;
 }
 
 .bar {
@@ -88,7 +145,7 @@ body {
 
 .accept, .deny {
     aspect-ratio: 1;
-    height: 80%;
+    height: 60px;
     transition: filter 0.5s;
 }
 
@@ -109,6 +166,44 @@ body {
     width: 80%;
 }
 
+div:has(> .username) {
+    width: 100%;
+    display: flex;
+    justify-content: end;
+}
+
+.username {
+    max-width: calc(100% - 100px);
+    overflow-wrap: break-word;
+}
+
+.search {
+    width: var(--width);
+    height: 50px;
+    border: none;
+    padding-left: 35px;
+    border-radius: var(--borders);
+}
+
+.search-container {
+    height: 50px;
+    display: flex;
+    align-items: center;
+}
+
+.search-container > img {
+    height: 20px;
+    position: absolute;
+    left: calc(50vw - 190px);
+}
+
+.magnify {
+    position: absolute;
+    height: 25px;
+    top: 145px;
+    left: 200px;
+}
+
 @keyframes timer-bar {
     0% {
         background-color: rgb(0, 255, 0);
@@ -126,24 +221,28 @@ body {
         transform: translateY(0);
     }
     1% {
-        transform: translateY(-26vh);
+        transform: translateY(-220px);
     }
     99% {
-        transform: translateY(-26vh);
+        transform: translateY(-220px);
     }
     100% {
         transform: translateY(0);
     }
 }
 
-@media (orientation : portrait) {
+@media (max-width : 500px) {
+    :root {
+        --width: 300px;
+    }
+
     .invite {
-        width: 80vw;
-        left: 10vw;
+        --lil-bit: 40px
     }
 
     .invite-name {
         font-size: 1em;
+        align-items: start;
     }
 
     .info > span {
@@ -154,6 +253,20 @@ body {
     
     .accept, .deny {
         height: auto;
-        width: 90%;
+        width: 60px;
+    }
+
+    .list {
+        width: var(--width);
+        height: 350px;
+        border-radius: 25px;
+    }
+
+    .search-container {
+        width: var(--width);
+    }
+
+    .search-container > img {
+        left: calc(50vw - 140px);
     }
 }

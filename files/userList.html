@@ -9,11 +9,13 @@
 </head>
 <body>
     <template data-template="item">
-        <div class="item">
-            <span class="name"></span>
-            <button>invite</button>
+        <div class="item-container">
+            <div class="item">
+                <div class="name"></div>
+                <button></button>
+            </div>
+            <hr>
         </div>
-        <hr>
     </template>
     <template data-template="invite">
         <div class="invite">
@@ -27,8 +29,25 @@
             <div class="bar"></div>
         </div>
     </template>
+    <div>
+        <span class="username-before">Username: </span>
+        <span class="username"></span>
+    </div>
     <h2>Users</h2>
-    <div class="list"></div>
+    <div class="search-container">
+        <img src="./images/search.png" alt="">
+        <input type="text" class="search" placeholder="Search for users...">
+    </div>
+    <div class="list-container">
+        <div class="list"></div>
+        <div class="scrollbar">
+            <div class="scroll"></div>
+        </div>
+    </div>
     <div class="invite-container"></div>
+    <div>
+        <input type="text" class="rename">
+        <button class="rename-button">Rename</button>
+    </div>
 </body>
 </html>

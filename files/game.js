@@ -13,12 +13,14 @@ let size = "small"
 let n
 let role
 let P1Turn
+let disconnectIDs = new Map()
 let sizeDiv = document.querySelector(".size")
 let small = document.querySelector(".small")
 let big = document.querySelector(".big")
-let upper = document.querySelector(".upper")
+let display = document.querySelector(".display")
 let roleDiv = document.querySelector(".role")
 let turnDiv = document.querySelector(".turn")
+let returnButton = document.querySelector(".return")
 let username = localStorage.getItem("username")
 let id = localStorage.getItem("id")
 let roomName = localStorage.getItem("roomName")
@@ -43,6 +45,7 @@ for (let i = 1; i < 10; i++) {
 
 canvas.addEventListener("click", tap)
 sizeDiv.addEventListener("click", changeSize)
+returnButton.addEventListener("click", confirmReturn)
 
 socket.on("connect", () => {
     socket.emit("login", id, username, roomName)
@@ -51,21 +54,47 @@ socket.on("connect", () => {
 
 socket.on("refresh", (obj) => {
     layout = obj.grid
-    P1Turn = obj.turn
-    console.log(obj);
+    P1Turn = obj.P1Turn
     updateUpper(obj.names)
     refreshBoard()
+    if (obj.result) declareWin(obj.winner, obj.names)
 })
-socket.on("role", (r, turn, num) => {
-    role = r
-    n = num
-    P1Turn = turn
-    updateUpper()
+socket.on("role", (obj) => {
+    role = obj.role
+    layout = obj.layout
+    n = obj.n
+    P1Turn = obj.P1Turn
+    if (obj.size == "big") changeSize(false)
+    updateUpper(obj.names)
+    refreshBoard()
+    if (role == "spectator") {
+        changeButton()
+        sizeDiv.remove()
+    }
+    for (const [id, username] of obj.disconnected) {
+        display.innerHTML += `<div id="${id}">${username} has disconnected</div>`
+    }
+    if (obj.result) declareWin(obj.winner, obj.names)
+    if (obj.moved) sizeDiv.removeEventListener("click", changeSize)
 })
 
 socket.on("return", () => {
     window.alert("Room no longer exists, please return to lobby")
     window.location.href = "./"    
+})
+
+socket.on("disconnected", (username, id) => {
+    let disconnectID = setTimeout(() => {
+        display.innerHTML += `<div id="${id}">${username} has disconnected</div>`
+    }, 1000);
+    disconnectIDs.set(id, disconnectID)
+})
+
+socket.on("reconnected", (id) => {
+    let disconnectID = disconnectIDs.get(id)
+    clearTimeout(disconnectID)
+    let div = document.getElementById(id) ?? false
+    if (div) div.remove()
 })
 
 function refreshBoard() {
@@ -93,13 +122,18 @@ function tap(e) {
     let x = e.clientX - rect.left
     let y = e.clientY - rect.top
     let grid = grids.find(g => {return x > g.x && x < (g.x + width / 3) && y > g.y && y < (g.y + height / 3)})
-
+    let layoutGrid = layout.find(g => {return g.id == grid.id})
+    if (layoutGrid.small > 0 || (layoutGrid.big > 0 && size == "big")) return
     socket.emit("tap", roomName, grid.id, size, n)
     changeSize()
+    sizeDiv.removeEventListener("click", changeSize)
 }
 
-function changeSize() {
+function changeSize(updateServer = true) {
     size = (size == "big")? "small": "big"
+    small.classList.toggle("selected")
+    big.classList.toggle("selected")
+    if (updateServer) socket.emit("size", n, size, roomName)
 }
 
 function updateUpper(names) {
@@ -115,9 +149,38 @@ function updateUpper(names) {
     }
 }
 
-// setInterval(() => {
-//     send({}, "GET")
-//     refreshBoard()
-// }, 1000)
-// send({}, "GET")
+function declareWin(winner, names) {
+    let winnerName = names[winner - 1]
+    display.innerHTML += (winner == n)? `<div>You win</div>`: `<div>${winnerName} wins</div>`
+    canvas.removeEventListener("click", tap)
+    let timerDiv = document.createElement("div")
+    let t = 60
+    timerDiv.classList.add("timer")
+    display.appendChild(timerDiv)
+    changeButton()
+    timerDiv.innerText = `Returning to lobby in ${t--} seconds`
+    setInterval(() => {
+        let div = document.querySelector(".timer")
+        div.innerText = `Returning to lobby in ${t--} seconds`
+    }, 1000);
+    setTimeout(() => {
+        timerDiv.remove()
+        window.location.href = "./"
+    }, 60000);
+    localStorage.setItem("roomName", "")
+}
+
+function confirmReturn() {
+    if (window.confirm("Are you sure?")) socket.emit("forfeit", roomName, n)
+}
+
+function changeButton() {
+    returnButton.removeEventListener("click", confirmReturn)
+    returnButton.addEventListener("click", () => {
+        localStorage.setItem("roomName", "")
+        window.location.href = "./"
+    })
+    returnButton.innerText = "Return to lobby"
+}
+
 refreshBoard()

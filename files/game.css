@@ -10,8 +10,8 @@ body {
     flex-direction: column;
     align-items: center;
     background-color: teal;
-    gap: 20vh;
-    overflow: hidden;
+    gap: 10vh;
+    padding-bottom: 5vh;
 }
 
 canvas {
@@ -23,11 +23,77 @@ canvas {
     height: 20vh;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
+    gap: 30vw;
+}
+
+.role, .turn {
+    width: 35%;
+    text-align: center;
+    color: white;
 }
 
 .size {
+    --size-width: 150px;
+    position: absolute;
     display: flex;
-    aspect-ratio: 1 / 2;
-    width: 20vw;
+    top: calc(10vh - var(--size-width) / 4);
+    left: calc(50vw - var(--size-width) / 2);
+    aspect-ratio: 2 / 1;
+    width: var(--size-width);
+    justify-content: space-between;
+    user-select: none;
+    color: black !important;
+}
+
+.small, .big {
+    width: 50%;
+    border: 3px solid black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5em;
+    background-color: rgb(208, 208, 208);
+}
+
+.small:hover, .big:hover {
+    filter: brightness(0.8);
+}
+
+.small {
+    border-radius: 10px 0 0 10px;
+    border-right: 1.6px solid black;
+}
+
+.big {
+    border-radius: 0 10px 10px 0;
+    border-left: 1.6px solid black;
+}
+
+.selected {
+    border-color: yellow;
+}
+
+.display > div {
+    text-align: center;
+}
+
+.return {
+    padding: 10px;
+    border-radius: 10px;
+}
+
+@media only screen and (max-width: 500px) {
+    .role {
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        padding-left: 5px;
+    }
+
+    .size {
+        --size-width: 120px;
+        font-size: 0.8em;
+        
+    }
 }
