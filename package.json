@@ -4,7 +4,8 @@
   "description": "This is a new version of tic tac toe that uses size differences to make the game more fun",
   "main": "script.js",
   "scripts": {
-    "test": "node script.js"
+    "test": "node script.js",
+    "start": "node script.js"
   },
   "repository": {
     "type": "git",
