@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/Han4578/Online-Advanced-Tic-Tac-Toe#readme",
   "dependencies": {
-    "express": "^4.19.2"
+    "express": "^4.19.2",
+    "socket.io": "^4.7.5"
   }
 }
