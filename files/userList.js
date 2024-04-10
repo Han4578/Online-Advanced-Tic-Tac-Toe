@@ -43,9 +43,7 @@ socket.on("refresh", (array) => {
         let item = template.content.cloneNode(true)
         let name = item.querySelector(".name")
         let button = item.querySelector("button")
-        let buttonFunction = () => {
-            (obj.room == "lobby")? invite(obj.socketID, button): spectate(obj.room)            
-        }
+
         if (userMap.has(id)) {
             let user = userMap.get(id)
             let item = document.querySelector(`#U${id}`)
@@ -54,14 +52,15 @@ socket.on("refresh", (array) => {
                 item.remove()
                 list.insertBefore(item, list.children[i - 1])
             }
-            if (user.room != obj.room) button.innerText = (obj.room == "lobby")? "invite": "spectate"
             i++
             continue
         }
         name.innerText = obj.username
         item.querySelector(".item-container").id = `U${id}`
         button.innerText = (obj.room == "lobby")? "invite": "spectate"
-        button.addEventListener("click", buttonFunction)
+        button.addEventListener("click", () => {
+            (obj.room == "lobby")? invite(obj.socketID, button): spectate(obj.room)            
+        })
         if (list.children.length > i) list.insertBefore(item, list.children[i - 1])
         else list.appendChild(item)
         i++
