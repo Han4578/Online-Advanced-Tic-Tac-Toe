@@ -1,4 +1,4 @@
-let express = require("../express")
+let express = require("express")
 let {Server} = require("socket.io")
 let cors = require("cors")
 let http = require("http")

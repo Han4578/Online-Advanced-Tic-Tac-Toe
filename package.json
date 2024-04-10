@@ -1,0 +1,25 @@
+{
+  "name": "advanced-tic-tac-toe",
+  "version": "1.0.0",
+  "description": "This is a new version of tic tac toe that uses size differences to make the game more fun",
+  "main": "script.js",
+  "scripts": {
+    "test": "node script.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Han4578/Online-Advanced-Tic-Tac-Toe.git"
+  },
+  "keywords": [
+    "[tic-tac-toe]"
+  ],
+  "author": "Han4578",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Han4578/Online-Advanced-Tic-Tac-Toe/issues"
+  },
+  "homepage": "https://github.com/Han4578/Online-Advanced-Tic-Tac-Toe#readme",
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
