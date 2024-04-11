@@ -95,7 +95,8 @@ io.on("connection", (socket) => {
             winner: 0,
             size: ["small", "small"],
             P1Moved: false,
-            P2Moved: false
+            P2Moved: false,
+            draw: false
         })
         io.to(users.get(P1).socketID).to(users.get(P2).socketID).emit("redirect", "./room", roomName)
     })
@@ -108,9 +109,6 @@ io.on("connection", (socket) => {
         let role = (room.players.includes(id))? "player": "spectator"
         let P1Turn = room.P1Turn
         let n
-        let names = room.players.map(p => {
-            return users.get(p).username
-        })
         if (role == "player") n = (room.P1 == id)? 1 : 2
         else n = 0
 
@@ -119,7 +117,7 @@ io.on("connection", (socket) => {
                 P1Turn: P1Turn, 
                 n: n, 
                 layout: Array.from(room.grid.values()), 
-                names: names,
+                names: getNames(room.players),
                 disconnected: Array.from(room.disconnected.entries()),
                 result: room.result,
                 winner: room.winner,
@@ -133,16 +131,14 @@ io.on("connection", (socket) => {
         let turn = room.P1Turn
         room.P1Turn = !turn
         grid.get(gridID)[size] = n
-        let names = room.players.map(p => {
-            return users.get(p).username
-        })
+        if (size == "small") grid.get(gridID)["big"] = 3
         let [result, winner] = checkWin(grid)
         if (n == 1) room.P1Moved = true
         else room.P2Moved = true
         io.to(roomName).emit("refresh", {
             grid: Array.from(grid.values()),
             P1Turn: !turn,
-            names: names,
+            names: getNames(room.players),
             result: result,
             winner: winner
         })
@@ -155,15 +151,12 @@ io.on("connection", (socket) => {
         let room = rooms.get(roomName)
         let grid = room.grid
         let turn = room.P1Turn
-        let names = room.players.map(p => {
-            return users.get(p).username
-        })
         io.to(roomName).emit("refresh", {
             grid: Array.from(grid.values()),
             P1Turn: !turn,
-            names: names,
+            names: getNames(room.players),
             result: true,
-            winner: (n == 1)? 2: 1
+            winner: (n == 1)? 2: 1,
         })
         room.winner = (n == 1)? 2: 1
         room.result = true
@@ -179,6 +172,21 @@ io.on("connection", (socket) => {
     socket.on("size", (n, size, roomName) => {
         let room = rooms.get(roomName)
         room.size[n - 1] = size
+        if (room.size.every(s => {return Array.from(room.grid.values()).every(g => {return g[s] > 0})})) {
+            io.to(roomName).emit("draw")
+            room.draw = true
+        }
+    })
+    socket.on("noMoves", (roomName, n) => {
+        let room = rooms.get(roomName)
+        io.to(roomName).emit("refresh", {
+            grid: Array.from(room.grid.values()),
+            P1Turn: !room.P1Turn,
+            names: getNames(room.players),
+            result: true,
+            winner: (n == 1)? 2: 1,
+            noMoves: true
+        })
     })
 })
 
@@ -227,6 +235,12 @@ function refreshLobby() {
         obj.socket = ""
         return [id, obj]
     }))
+}
+
+function getNames(players) {
+    return players.map(p => {
+        return users.get(p).username
+    })
 }
 
 server.listen(1010)

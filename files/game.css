@@ -11,7 +11,12 @@ body {
     align-items: center;
     background-color: aqua;
     gap: 5vh;
-    padding-bottom: 5vh;
+    padding: 0 5% 5vh 5%;
+    
+}
+
+canvas {
+    background-color: white;
 }
 
 .upper {
@@ -23,10 +28,26 @@ body {
     gap: 30vw;
 }
 
-.role, .turn {
-    width: 35%;
+.role, .turn-container {
+    width: 30%;
+}
+
+.turn-container {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    gap: 2%;
+}
+
+.turn {
     text-align: center;
-    color: white;
+}
+
+.color {
+    border-radius: 50%;
+    aspect-ratio: 1;
+    width: 20%;
+    max-width: 40px;
 }
 
 .size {

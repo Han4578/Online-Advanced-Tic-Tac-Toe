@@ -1,6 +1,5 @@
 import {io} from "https://cdn.socket.io/4.4.1/socket.io.esm.min.js"
 const socket = io()
-let domain = "http://192.168.0.111:1010"
 let canvas = document.querySelector("#board")
 let layout = [] //server object
 let ctx = canvas.getContext("2d")
@@ -20,6 +19,7 @@ let big = document.querySelector(".big")
 let display = document.querySelector(".display")
 let roleDiv = document.querySelector(".role")
 let turnDiv = document.querySelector(".turn")
+let color = document.querySelector(".color")
 let returnButton = document.querySelector(".return")
 let username = localStorage.getItem("username")
 let id = localStorage.getItem("id")
@@ -57,7 +57,8 @@ socket.on("refresh", (obj) => {
     P1Turn = obj.P1Turn
     updateUpper(obj.names)
     refreshBoard()
-    if (obj.result) declareWin(obj.winner, obj.names)
+    if (obj.result || obj.noMoves) declareWin(obj.winner, obj.names, obj.noMoves)
+    else if (checkDraw()) socket.emit("noMoves", roomName, n)
 })
 socket.on("role", (obj) => {
     role = obj.role
@@ -142,15 +143,18 @@ function updateUpper(names) {
     if (role == "spectator") {
         roleDiv.innerText = "Spectating..."
         turnDiv.innerText =  `${names[(P1Turn)? 0: 1]}'s turn`
+        color.style.backgroundColor =  (P1Turn)? "red": "blue"
     }
     else {
         roleDiv.innerText = username
         turnDiv.innerText =  ((n == 1 && !P1Turn) || (n == 2 && P1Turn))? "Their turn": "Your turn"
+        color.style.backgroundColor =  (P1Turn)? "red": "blue"
     }
 }
 
-function declareWin(winner, names) {
+function declareWin(winner, names, noMoves) {
     let winnerName = names[winner - 1]
+    if (noMoves) display.innerHTML += `<div>${(winner == n)? names[(winner == 1)? 1: 0]: "You"} ran out of moves</div>`
     display.innerHTML += (winner == n)? `<div>You win</div>`: `<div>${winnerName} wins</div>`
     canvas.removeEventListener("click", tap)
     let timerDiv = document.createElement("div")
@@ -181,6 +185,10 @@ function changeButton() {
         window.location.href = "./"
     })
     returnButton.innerText = "Return to lobby"
+}
+
+function checkDraw() {
+    return layout.every(g => {return g[size] > 0})
 }
 
 refreshBoard()
